@@ -1,0 +1,540 @@
+
+def drawGlyphDesign8(self, painter, option, widget=None):
+    R     = self.__size  # the total radius of the glyph
+    r     = R*0.25
+
+    # scale the parameters between [0.0, 1.0] to fit in the glyph
+    VCL   = self.__vcl; VAP = self.__vap; VSL = self.__vsl
+    width = self.__width*r; length = self.__length*r
+    vslRadius  = R*VSL
+    vapRadius  = R*VAP
+    vclRadius  = R*VCL
+
+    BCF = self.__bcf*rangeBCF;
+    #        if self.__hardEdges:
+    #            painter.setPen( Qt.black )
+
+    painter.setBrush( geometry.linearColorMap(QColor(0,0,255),
+        QColor(255,0,0), BCF) )
+    painter.drawEllipse( geometry.square( vclRadius ) ) # draw VCL
+    painter.setBrush( Qt.white )
+    painter.drawEllipse( geometry.square( vapRadius ) ) # draw VAP
+    painter.drawEllipse( geometry.square( vslRadius ) ) # draw VSL
+
+    painter.setBrush( QColor(Qt.black) )
+    direction = QPolygonF( [ QPointF(   0.0, -R*0.2) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF(-R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF( R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03) ] )
+    painter.drawPolygon(direction)
+
+    painter.setBrush( Qt.red )
+    painter.rotate(self.__angle)
+    MAD = QPolygonF( [ QPointF(   0.0,  -R*0.1) + QPointF(0.0,-length*1.03),
+                       QPointF(-R*0.05,    0.0) + QPointF(0.0,-length*1.03),
+                       QPointF( R*0.05,    0.0) + QPointF(0.0,-length*1.03) ] )
+    painter.drawPolygon(MAD)
+
+    # draw the head
+    painter.setBrush( geometry.linearColorMap3( QColor(  0, 255, 0),
+        QColor(255, 126, 0),
+        QColor(255,   0, 0), self.__uncertainty) )
+    painter.drawEllipse( geometry.rectangle( width, length ) )
+
+    flagellum = geometry.square(r)
+    startAngle = (270.0 - (self.__theta*0.5) ) * 16.0
+    spanAngle  = self.__theta * 16.0
+
+    painter.translate( QPointF(0.0,length) )
+    torque      = self.__torque
+    torqueColor = geometry.linearColorMap(QColor(0,255,0),QColor(255,0,0), torque)
+    painter.setBrush( torqueColor )
+    painter.drawPie(flagellum, startAngle, spanAngle)
+    painter.translate( QPointF(0.0,-length) )
+
+    # pen must be set in order to draw the asymmetry
+    ARC = self.__arc
+    pen = QPen(Qt.black)
+    pen.setWidth(6)
+    painter.setPen( Qt.black )
+    asymmetry = math.degrees(self.__asymmetry)
+    painter.translate( QPointF(0.0, length) )
+    painter.rotate(asymmetry)
+    painter.setBrush( QColor(0.0, 0.0, 0.0) )
+    painter.drawLine( QPointF( 0.0, 0.0 ), QPointF( 0.0, R*ARC ) )
+
+def drawGlyphDesign7(self, painter, option, widget=None):
+    R     = self.__size  # the total radius of the glyph
+    r     = R*0.25
+
+    # scale the parameters between [0.0, 1.0] to fit in the glyph
+    VCL = self.__vcl; VAP = self.__vap; VSL = self.__vsl
+
+    vslRadius  = R*VSL
+    vapRadius  = R*VAP
+    vclRadius  = R*VCL
+
+    velocity = (vclRadius + vapRadius)*0.5
+    BCF = self.__bcf
+    ALH = (vclRadius - vapRadius)*0.5
+
+    #        if not self.__hardEdges:
+    #            painter.setPen( Qt.NoPen)
+    #
+    painter.setBrush( QColor(Qt.black) )
+    direction = QPolygonF( [ QPointF(   0.0, -R*0.2) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF(-R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF( R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03) ] )
+    painter.drawPolygon(direction)
+
+    width = self.__width*r; length = self.__length*r
+
+    painter.setBrush( Qt.red )
+    painter.rotate(self.__angle)
+    MAD = QPolygonF( [ QPointF(   0.0,  -R*0.1) + QPointF(0.0,-length*1.03),
+                       QPointF(-R*0.05,    0.0) + QPointF(0.0,-length*1.03),
+                       QPointF( R*0.05,    0.0) + QPointF(0.0,-length*1.03) ] )
+    painter.drawPolygon(MAD)
+
+    painter.setBrush( geometry.linearColorMap3( QColor(  0, 255, 0),
+        QColor(255, 126, 0),
+        QColor(255,   0, 0), self.__uncertainty) )
+    painter.setPen( Qt.NoPen )
+    painter.drawEllipse( geometry.rectangle( width, length ) )
+
+    flagellum = geometry.square(r)
+    startAngle = (270.0 - (self.__theta*0.5) ) * 16.0
+    spanAngle  = self.__theta * 16.0
+
+    painter.translate( QPointF(0.0,length) )
+    torque      = self.__torque
+    torqueColor = geometry.linearColorMap(QColor(0,255,0),QColor(255,0,0), torque)
+    painter.setBrush( torqueColor )
+    painter.drawPie(flagellum, startAngle, spanAngle)
+    painter.translate( QPointF(0.0,-length) )
+
+    # pen must be set in order to draw the asymmetry
+    ARC = self.__arc
+    pen = QPen(Qt.black)
+    pen.setWidth(6)
+    painter.setPen( Qt.black )
+    asymmetry = math.degrees(self.__asymmetry)
+    painter.translate( QPointF(0.0, length) )
+    painter.rotate(asymmetry)
+    painter.setBrush( QColor(0.0, 0.0, 0.0) )
+    painter.drawLine( QPointF( 0.0, 0.0 ), QPointF( 0.0, R*ARC ) )
+    painter.rotate(-asymmetry)
+    painter.translate( QPointF(0.0, -length))
+
+    painter.setPen( Qt.black )
+    painter.setBrush( Qt.NoBrush)
+    painter.drawEllipse( geometry.square( vclRadius ) ) # draw VCL
+
+    geometry.spottyBorder(painter, velocity, ALH, BCF)
+
+    painter.setPen( Qt.black )
+    painter.drawEllipse( geometry.square( vapRadius ) ) # draw VAP
+    painter.drawEllipse( geometry.square( vslRadius ) ) # draw VSL
+
+# end def
+
+def drawGlyphDesign6(self, painter, option, widget=None):
+    R  = self.__size  # the total radius of the glyph
+    r  = R*0.25
+
+    # scale the parameters between [0.0, 1.0] to fit in the glyph
+    VCL = self.__vcl
+    VAP = self.__vap
+    VSL = self.__vsl
+
+    vslRadius  = VSL * R
+    vapRadius  = VAP * R
+    vclRadius  = VCL * R
+
+    velocity = (vclRadius + vapRadius)*0.5
+    BCF = self.__bcf
+    ALH = (vclRadius - vapRadius)*0.5
+    ARC = self.__arc
+
+    polygon = geometry.waveyBorder(velocity, ALH, BCF)
+
+    # draw the arrow that marks the orientation
+    painter.setBrush( QColor(Qt.black) )
+    direction = QPolygonF( [ QPointF(   0.0, -R*0.2) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF(-R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF( R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03) ] )
+    painter.drawPolygon(direction)
+
+    width = self.__width*r; length = self.__length*r
+
+    # draw the arrow that marks the MAD
+    painter.setBrush( Qt.red )
+    painter.rotate(self.__angle)
+    MAD = QPolygonF( [ QPointF(   0.0,  -R*0.1) + QPointF(0.0,-length*1.03),
+                       QPointF(-R*0.05,    0.0) + QPointF(0.0,-length*1.03),
+                       QPointF( R*0.05,    0.0) + QPointF(0.0,-length*1.03) ] )
+    painter.drawPolygon(MAD)
+
+    painter.setBrush( geometry.linearColorMap3( QColor(  0, 255, 0),
+        QColor(255, 126, 0),
+        QColor(255,   0, 0), self.__uncertainty) )
+    painter.setPen( Qt.NoPen )
+    painter.drawEllipse( geometry.rectangle( width, length ) )
+
+    flagellum = geometry.square(R*ARC)
+    startAngle = (270.0 - (self.__theta*0.5) ) * 16.0
+    spanAngle  = self.__theta * 16.0
+
+    painter.translate( QPointF(0.0,length) )
+    torque      = self.__torque
+    torqueColor = geometry.linearColorMap(QColor(0,255,0),QColor(255,0,0), torque)
+    painter.setBrush( torqueColor )
+    painter.drawPie(flagellum, startAngle, spanAngle)
+    painter.translate( QPointF(0.0,-length) )
+
+    # pen must be set in order to draw the asymmetry
+    pen = QPen(Qt.black)
+    pen.setWidth(6)
+    painter.setPen( Qt.black )
+    asymmetry = math.degrees(self.__asymmetry)
+    painter.translate( QPointF(0.0,length) )
+    painter.rotate(asymmetry)
+    painter.setBrush( QColor(0.0, 0.0, 0.0) )
+    painter.drawLine( QPointF( 0.0, 0.0 ), QPointF( 0.0, R*ARC ) )
+    painter.rotate(-asymmetry)
+    painter.translate( QPointF(0.0,-length) )
+
+    painter.setPen( Qt.black )
+    # draw the circles representing the velocities of the head
+    painter.setBrush( Qt.NoBrush )
+    painter.setPen( Qt.gray )
+    painter.drawPolygon( polygon )
+    painter.setPen( Qt.black )
+    painter.drawEllipse( geometry.square( vslRadius ) ) # draw VSL
+    painter.setPen( Qt.DotLine )
+    painter.drawEllipse( geometry.square( vapRadius ) ) # draw VAP
+    painter.drawEllipse( geometry.square( vclRadius ) ) # draw VCL
+    painter.setPen( Qt.SolidLine )
+# end def
+
+def drawGlyphDesign5(self, painter, option, widget=None):
+    R   = self.__size  # the total radius of the glyph
+    r   = R*0.5
+    hr  = r*0.6
+    abr = r*0.4
+
+    # scale the parameters between [0.0, 1.0] to fit in the glyph
+    VCL = self.__vcl
+    VAP = self.__vap
+    VSL = self.__vsl
+
+    vslRadius  = r + VSL * R
+    vapRadius  = r + VAP * R
+    vclRadius  = r + VCL * R
+
+    BCF = self.__bcf*rangeBCF*abr
+    ALH = self.__alh*abr
+    ARC = self.__arc
+    width = self.__width*hr; length = self.__length*hr
+    painter.setPen( Qt.black )
+    # draw the circles representing the velocities of the head
+    painter.setBrush( Qt.NoBrush )
+    painter.drawEllipse( geometry.square( vslRadius ) ) # draw VSL
+    painter.drawEllipse( geometry.square( vapRadius ) ) # draw VAP
+    painter.drawEllipse( geometry.square( vclRadius ) ) # draw VCL
+
+    # draw the arrow that marks the orientation
+    painter.setBrush( QColor(Qt.black) )
+    direction = QPolygonF( [ QPointF(   0.0, -R*0.2) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF(-R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF( R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03) ] )
+    painter.drawPolygon(direction)
+
+    # draw the arrow that marks the MAD
+    painter.setBrush( Qt.red )
+    painter.rotate(self.__angle)
+    MAD = QPolygonF( [ QPointF(   0.0,  -R*0.1) + QPointF(0.0,-r*1.03),
+                       QPointF(-R*0.05,    0.0) + QPointF(0.0,-r*1.03),
+                       QPointF( R*0.05,    0.0) + QPointF(0.0,-r*1.03) ] )
+    painter.drawPolygon(MAD)
+
+    painter.setBrush( geometry.linearColorMap3( QColor(  0, 255, 0),
+        QColor(255, 126, 0),
+        QColor(255,   0, 0), self.__uncertainty) )
+    painter.setPen( Qt.NoPen )
+    painter.translate( QPointF(0.0,-(r-hr) ) )
+    painter.drawEllipse( geometry.rectangle( width, length ) )
+    painter.translate( QPointF(0.0, (r-hr) ) )
+
+    painter.setPen( Qt.black )
+    painter.setBrush( Qt.NoBrush )
+    painter.translate( QPointF(0.0, (r-abr) ) )
+    painter.drawEllipse( geometry.rectangle(BCF,ALH))
+    painter.translate( QPointF(0.0,-(r-abr) ) )
+    painter.setPen(Qt.NoPen)
+
+    flagellum = geometry.square(R*ARC)
+    startAngle = (270.0 - (self.__theta*0.5) ) * 16.0
+    spanAngle  = self.__theta * 16.0
+
+    painter.translate( QPointF(0.0,r) )
+    torque      = self.__torque
+    torqueColor = geometry.linearColorMap(QColor(0,255,0),QColor(255,0,0), torque)
+    painter.setBrush( torqueColor )
+    painter.drawPie(flagellum, startAngle, spanAngle)
+    painter.translate( QPointF(0.0,-r) )
+
+    # pen must be set in order to draw the asymmetry
+    pen = QPen(Qt.black)
+    pen.setWidth(6)
+    painter.setPen( Qt.black )
+    asymmetry = math.degrees(self.__asymmetry)
+    painter.translate( QPointF(0.0,r) )
+    painter.rotate(asymmetry)
+    painter.setBrush( QColor(0.0, 0.0, 0.0) )
+    painter.drawLine( QPointF( 0.0, 0.0 ), QPointF( 0.0, R*ARC ) )
+    painter.rotate(-asymmetry)
+    painter.translate( QPointF(0.0,-r) )
+# end def
+
+def drawGlyphDesign4(self, painter, option, widget=None):
+    R   = self.__size  # the total radius of the glyph
+    r   = R*0.5
+    hr  = r*0.6
+    abr = r*0.4
+
+    # scale the parameters between [0.0, 1.0] to fit in the glyph
+    VCL = self.__vcl
+    VAP = self.__vap
+    VSL = self.__vsl
+
+    vslRadius  = r + VSL * R
+    vapRadius  = r + VAP * R
+    vclRadius  = r + VCL * R
+
+    BCF = self.__bcf*rangeBCF*abr
+    ALH = self.__alh*abr
+    ARC = self.__arc
+    width = self.__width*hr; length = self.__length*hr
+    painter.setPen( Qt.NoPen )
+    # draw the circles representing the velocities of the head
+    painter.setBrush( QColor( 172, 146, 146 ) )
+    painter.drawEllipse( geometry.square( vclRadius ) ) # draw VCL
+    painter.setBrush( QColor( 210,  95,  95 ) )
+    painter.drawEllipse( geometry.square( vapRadius ) ) # draw VAP
+    painter.setBrush( QColor( 141,  95, 210 ) )
+    painter.drawEllipse( geometry.square( vslRadius ) ) # draw VSL
+
+    # draw the arrow that marks the orientation
+    painter.setBrush( QColor(Qt.black) )
+    direction = QPolygonF( [ QPointF(   0.0, -R*0.2) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF(-R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF( R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03) ] )
+    painter.drawPolygon(direction)
+
+    # draw the arrow that marks the MAD
+    painter.setBrush( Qt.black )
+    painter.rotate(self.__angle)
+    MAD = QPolygonF( [ QPointF(   0.0,  -R*0.2) + QPointF(0.0,-r*1.03),
+                       QPointF(-R*0.1,    0.0) + QPointF(0.0,-r*1.03),
+                       QPointF( R*0.1,    0.0) + QPointF(0.0,-r*1.03) ] )
+    painter.drawPolygon(MAD)
+
+    painter.setBrush( geometry.linearColorMap3( QColor(  0, 255, 0),
+        QColor(255, 126, 0),
+        QColor(255,   0, 0), self.__uncertainty) )
+    painter.translate( QPointF(0.0,-(r-hr) ) )
+    painter.drawEllipse( geometry.rectangle( width, length ) )
+    painter.translate( QPointF(0.0, (r-hr) ) )
+
+    painter.setPen( Qt.black )
+    painter.setBrush( QColor(176, 224, 230) )
+    painter.translate( QPointF(0.0, (r-abr) ) )
+    painter.drawEllipse( geometry.rectangle(BCF,ALH))
+    painter.translate( QPointF(0.0,-(r-abr) ) )
+    painter.setPen( Qt.NoPen )
+
+    flagellum = geometry.square(R*ARC)
+    startAngle = (270.0 - (self.__theta*0.5) ) * 16.0
+    spanAngle  = self.__theta * 16.0
+
+    painter.translate( QPointF(0.0,r) )
+    torque      = self.__torque
+    torqueColor = geometry.linearColorMap(QColor(0,255,0),QColor(255,0,0), torque)
+    painter.setBrush( torqueColor )
+    painter.drawPie(flagellum, startAngle, spanAngle)
+    painter.translate( QPointF(0.0,-r) )
+
+    # pen must be set in order to draw the asymmetry
+    pen = QPen(Qt.black)
+    pen.setWidth(6)
+    painter.setPen( Qt.black )
+    asymmetry = math.degrees(self.__asymmetry)
+    painter.translate( QPointF(0.0,r) )
+    painter.rotate(asymmetry)
+    painter.setBrush( QColor(0.0, 0.0, 0.0) )
+    painter.drawLine( QPointF( 0.0, 0.0 ), QPointF( 0.0, R*ARC ) )
+    painter.rotate(-asymmetry)
+    painter.translate( QPointF(0.0,-r) )
+# end def
+
+def drawGlyphDesign3(self, painter, option, widget=None):
+
+    R   = self.__size  # the total radius of the glyph
+    r   = R*0.5
+    hr  = r*0.6
+    abr = r*0.4
+
+    # scale the parameters between [0.0, 1.0] to fit in the glyph
+    VCL = self.__vcl
+    VAP = self.__vap
+    VSL = self.__vsl
+
+    vslRadius  = r + VSL * R
+    vapRadius  = r + VAP * R
+    vclRadius  = r + VCL * R
+
+    BCF = self.__bcf*rangeBCF*abr
+    ALH = self.__alh*rangeALH*abr
+    ARC = self.__arc
+    width = self.__width*hr; length = self.__length*hr
+
+    # draw the circles representing the velocities of the head
+
+    painter.setBrush( Qt.white )
+    painter.drawEllipse( geometry.square( vclRadius ) ) # draw VCL
+    painter.setBrush( QColor( 238, 130, 238 ) )
+    painter.drawEllipse( geometry.square( vapRadius ) ) # draw VAP
+    painter.setBrush( Qt.white )
+    painter.drawEllipse( geometry.square( vslRadius ) ) # draw VSL
+    painter.setBrush( Qt.gray )
+    painter.drawEllipse( geometry.square(r) )
+
+    # draw the arrow that marks the orientation
+    painter.setBrush( QColor(Qt.black) )
+    direction = QPolygonF( [ QPointF(   0.0, -R*0.2) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF(-R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF( R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03) ] )
+    painter.drawPolygon(direction)
+
+    # draw the arrow that marks the MAD
+    painter.setBrush( Qt.black )
+    painter.rotate(self.__angle)
+    MAD = QPolygonF( [ QPointF(   0.0,  -R*0.2) + QPointF(0.0,-r*1.03),
+                       QPointF(-R*0.1,    0.0) + QPointF(0.0,-r*1.03),
+                       QPointF( R*0.1,    0.0) + QPointF(0.0,-r*1.03) ] )
+    painter.drawPolygon(MAD)
+
+    painter.setBrush( geometry.linearColorMap3( QColor(  0, 255, 0),
+        QColor(255, 126, 0),
+        QColor(255,   0, 0), self.__uncertainty) )
+    painter.translate( QPointF(0.0,-(r-hr) ) )
+    painter.drawEllipse( geometry.rectangle( width, length ) )
+    painter.translate( QPointF(0.0, (r-hr) ) )
+
+    painter.setPen( Qt.black )
+    painter.setBrush( QColor(176, 224, 230) )
+    painter.translate( QPointF(0.0, (r-abr) ) )
+    painter.drawEllipse( geometry.rectangle(BCF,ALH))
+    painter.translate( QPointF(0.0,-(r-abr) ) )
+
+    flagellum = geometry.square(R*ARC)
+    startAngle = (270.0 - (self.__theta*0.5) ) * 16.0
+    spanAngle  = self.__theta * 16.0
+
+    painter.translate( QPointF(0.0,r) )
+    torque      = self.__torque
+    torqueColor = geometry.linearColorMap(QColor(0,255,0),QColor(255,0,0), torque)
+    painter.setBrush( torqueColor )
+    painter.drawPie(flagellum, startAngle, spanAngle)
+    painter.translate( QPointF(0.0,-r) )
+
+    # pen must be set in order to draw the asymmetry
+    pen = QPen(Qt.black)
+    pen.setWidth(6)
+    painter.setPen( Qt.black )
+    asymmetry = math.degrees(self.__asymmetry)
+    painter.translate( QPointF(0.0,r) )
+    painter.rotate(asymmetry)
+    painter.setBrush( QColor(0.0, 0.0, 0.0) )
+    painter.drawLine( QPointF( 0.0, 0.0 ), QPointF( 0.0, R*ARC ) )
+    painter.rotate(-asymmetry)
+    painter.translate( QPointF(0.0,-r) )
+# end def
+
+def drawGlyphDesign2(self, painter, option, widget=None):
+    R   = self.__size  # the total radius of the glyph
+    r   = R*0.5
+
+    # scale the parameters between [0.0, 1.0] to fit in the glyph
+    VCL = self.__vcl
+    VAP = self.__vap
+    VSL = self.__vsl
+
+    vslRadius  = r + VSL * R
+    vapRadius  = r + VAP * R
+    vclRadius  = r + VCL * R
+
+    velocity = (vclRadius + vapRadius)*0.5
+    BCF = self.__bcf
+    ALH = (vclRadius - vapRadius)*0.5
+    ARC = self.__arc
+    width = self.__width*r; length = self.__length*r
+
+    # draw the circles representing the velocities of the head
+
+    painter.setBrush( Qt.white )
+    painter.drawEllipse( geometry.square( vclRadius ) ) # draw VCL
+    torque      = self.__torque
+    torqueColor = geometry.linearColorMap(QColor(128,0,128),QColor(255,255,0), torque)
+    painter.setBrush( torqueColor )
+
+    painter.drawEllipse( geometry.square( vapRadius ) ) # draw VAP
+    painter.setBrush( Qt.white )
+    painter.drawEllipse( geometry.square( vslRadius ) ) # draw VSL
+
+    painter.setBrush( Qt.gray )
+    painter.drawEllipse( geometry.square(r) )
+
+    # draw the arrow that marks the orientation
+    painter.setBrush( Qt.black )
+    direction = QPolygonF( [ QPointF(   0.0, -R*0.2) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF(-R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03),
+                             QPointF( R*0.1,    0.0) + QPointF(0.0,-vclRadius*1.03) ] )
+    painter.drawPolygon(direction)
+
+    # draw the arrow that marks the MAD
+    painter.setBrush( Qt.white )
+    MAD = geometry.square(vapRadius*0.95)
+
+    startAngle = (90.0 - (self.__mad*0.5) ) * 16.0
+    spanAngle  = self.__mad * 16.0
+    painter.drawPie(MAD, startAngle, spanAngle)
+
+    geometry.lineBorder(painter, velocity, ALH, BCF)
+
+    painter.rotate(self.__angle)
+
+    painter.setBrush( Qt.white )
+    painter.setPen  ( Qt.black )
+    flagellum = geometry.square(R*ARC)
+    startAngle = (270.0 - (self.__theta*0.5) ) * 16.0
+    spanAngle  = self.__theta * 16.0
+
+    painter.translate( QPointF(0.0, r) )
+    painter.drawPie(flagellum, startAngle, spanAngle)
+    painter.translate( QPointF(0.0,-r) )
+
+    painter.setPen( Qt.gray )
+    asymmetry = math.degrees(self.__asymmetry)
+    painter.rotate(asymmetry)
+    painter.setBrush( QColor(0.0, 0.0, 0.0) )
+    painter.drawLine( QPointF( 0.0, r ), QPointF( 0.0, vclRadius ) )
+    painter.rotate(-asymmetry)
+    painter.setPen( Qt.black )
+
+    # draw the head and uncertainty
+    painter.setBrush( geometry.linearColorMap3( QColor(  0, 255, 0),
+        QColor(255, 126, 0),
+        QColor(255,   0, 0), self.__uncertainty) )
+    painter.drawEllipse( geometry.rectangle( width, length ) )
+# end def

@@ -1,0 +1,16 @@
+[HEADER]
+nMaxSperms      = 1
+frameWidth      = 640
+frameHeight     = 232
+FPS             = 293.4
+beatCycleLength = 71
+viscosity       = 0.015
+nFrames         = 859
+
+# 0.37 = 7.4 microns / x20 scaling factor
+
+pixelSize = 0.37
+
+[DATA]
+[Sperm=1]
+DataFile = set2_sperm1.txt

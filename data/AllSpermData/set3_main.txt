@@ -1,0 +1,14 @@
+[HEADER]
+nMaxSperms=3
+FPS = 15
+Scale = 12.5
+NFrames = 1000
+
+[DATA]
+[Sperm=1]
+DataFile=set3_sperm_1.txt
+[Sperm=2]
+DataFile=set3_sperm_2.txt
+[Sperm=3]
+DataFile=set3_sperm_3.txt
+

@@ -1,0 +1,10 @@
+[HEADER]
+nMaxSperms=1
+FPS = 15
+Scale = 12.5
+NFrames = 403
+
+[DATA]
+[Sperm=1]
+DataFile=set4_sperm_1.txt
+

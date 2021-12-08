@@ -1,0 +1,15 @@
+[HEADER]
+nMaxSperms        = 1
+frameWidth        = 640
+frameHeight       = 480
+FPS               = 50
+beatCycleLength   = 30
+
+# viscosity is measured in pascals per second? Pa.s
+viscosity         = 0.4
+nFrames           = 300
+pixelSize         = 0.37
+
+[DATA]
+[Sperm=1]
+DataFile=set5_sperm_3.txt
